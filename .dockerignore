@@ -1,0 +1,12 @@
+.git
+../.idea
+.env*
+.venv
+venv
+**/__pycache__
+**/*.py[cod]
+**/.DS_Store
+backups
+reports
+scripts
+reports/logs.txt

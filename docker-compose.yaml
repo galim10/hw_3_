@@ -1,0 +1,35 @@
+services:
+  hw_app:
+    image: app:${APP_VERSION}
+    build: ..
+    environment:
+      GREETING: ${GREETING}
+      STORAGE: redis
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - ${HOST_PORT}:${PORT}
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:${PORT}/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    read_only: true
+    mem_limit: 256m
+    cpus: 1.0
+  redis:
+    image: redis:7
+    command: [ "redis-server", "--appendonly", "yes" ]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  redis_data:
